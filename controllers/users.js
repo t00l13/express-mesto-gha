@@ -37,7 +37,7 @@ module.exports.createUser = async ( req, res) => {
   const {name, about, avatar} = req.body;
 
   try{
-    const user = await User.create({name, about, avatar});
+    const user = await User.create({name, about, avatar}).orFail(new NotFoundError());
     res.send({data: user});
   } catch(err) {
     let code = 500;
@@ -67,7 +67,7 @@ module.exports.updateUser = async ( req, res) => {
         new: true,
         runValidators:true,
       }
-    );
+    ).orFail(new NotFoundError());
     res.send({data: user});
   } catch(err) {
     let code = 500;
@@ -98,7 +98,7 @@ module.exports.updateAvatar = async ( req, res) => {
         runValidators:true,
         upsert: false,
       }
-    );
+    ).orFail(new NotFoundError());
     res.send({data: updateAvatar});
   } catch(err) {
     let code = 500;

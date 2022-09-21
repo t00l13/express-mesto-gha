@@ -1,4 +1,5 @@
 const Card = require("../models/card.js");
+const {NotFoundError} = require("../errors/errors.js");
 
 module.exports.getCards = async ( req, res) => {
   try{
@@ -13,7 +14,7 @@ module.exports.createCard = async (req, res) => {
   const {name, link} = req.body;
   const owner = req.user._id;
   try{
-    const card = await Card.create({name, link, owner});
+    const card = await Card.create({name, link, owner}).orFail(new NotFoundError());
     res.send({data: card});
   } catch(err) {
     let code = 500;
@@ -36,7 +37,7 @@ module.exports.createCard = async (req, res) => {
 module.exports.deleteCard = async (req, res) => {
   const reqCard = req.params.cardId;
   try{
-    const card = await Card.findByIdAndRemove(reqCard);
+    const card = await Card.findByIdAndRemove(reqCard).orFail(new NotFoundError());
     res.send({data: card});
   } catch(err) {
     let code = 500;
@@ -60,7 +61,7 @@ module.exports.likeCard = async (req, res) => {
   try{
     const likes = await Card.findByIdAndUpdate(req.params.cardId, {
       $addToSet: {likes: req.user._id}
-    }, {new: true});
+    }, {new: true}).orFail(new NotFoundError());
     res.send({data: likes});
   } catch(err) {
     let code = 500;
@@ -84,7 +85,7 @@ module.exports.dislikeCard = async (req, res) => {
   try{
     const likes = await Card.findByIdAndUpdate(req.params.cardId, {
       $pull: {likes: req.user._id}
-    }, {new: true});
+    }, {new: true}).orFail(new NotFoundError());
     res.send({data: likes});
   } catch(err) {
     let code = 500;
