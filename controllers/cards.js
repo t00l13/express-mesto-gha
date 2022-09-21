@@ -1,5 +1,5 @@
 const Card = require("../models/card.js");
-const {NotFoundError} = require("../errors/errors.js");
+const { NotFoundError } = require("../errors/errors.js");
 
 module.exports.getCards = async ( req, res) => {
   try{

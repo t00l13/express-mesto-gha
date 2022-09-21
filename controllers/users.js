@@ -1,5 +1,5 @@
 const User = require("../models/user.js");
-const {NotFoundError} = require("../errors/errors.js");
+const { NotFoundError } = require("../errors/errors.js");
 
 module.exports.getUsers = async (req,res) => {
   try{
