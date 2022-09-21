@@ -17,18 +17,19 @@ module.exports.getUser = async (req, res) => {
     res.send({data: user});
   } catch (err) {
     let code = 500;
-    let msg = "Произошла ошибка";
+    let message = "Произошла ошибка";
     switch (err.name) {
       case "CastError":
         code = 400;
-        msg = "Введены некорректные данные";
+        message = "Введены некорректные данные";
         break;
+
       case "NotFoundError":
         code = 404;
-        msg = "Данные не найдены";
+        message = "Данные не найдены";
         break;
     }
-    res.status(code).send(msg);
+    res.status(code).send(message);
   }
 };
 
@@ -40,14 +41,14 @@ module.exports.createUser = async ( req, res) => {
     res.send({data: user});
   } catch (err) {
     let code = 500;
-    let msg = "Произошла ошибка";
+    let message = "Произошла ошибка";
     switch (err.name) {
       case "ValidationError":
         code = 400;
-        msg = "Введены некорректные данные";
+        message = "Введены некорректные данные";
         break;
     }
-    res.status(code).send(msg);
+    res.status(code).send(message);
   }
 };
 
@@ -65,18 +66,19 @@ module.exports.updateUser = async ( req, res) => {
     res.send({data: user});
   } catch (err) {
     let code = 500;
-    let msg = "Произошла ошибка";
+    let message = "Произошла ошибка";
     switch (err.name) {
       case "CastError":
         code = 400;
-        msg = "Введены некорректные данные";
+        message = "Введены некорректные данные";
         break;
+
       case "NotFoundError":
         code = 404;
-        msg = "Данные не найдены";
+        message = "Данные не найдены";
         break;
     }
-    res.status(code).send(msg);
+    res.status(code).send(message);
   }
 };
 
@@ -95,17 +97,18 @@ module.exports.updateAvatar = async ( req, res) => {
     res.send({data: updateAvatar});
   } catch (err) {
     let code = 500;
-    let msg = "Произошла ошибка";
+    let message = "Произошла ошибка";
     switch (err.name) {
       case "CastError":
         code = 400;
-        msg = "Введены некорректные данные";
+        message = "Введены некорректные данные";
         break;
+
       case "NotFoundError":
         code = 404;
-        msg = "Данные не найдены";
+        message = "Данные не найдены";
         break;
     }
-    res.status(code).send(msg);
+    res.status(code).send(message);
   }
 };
