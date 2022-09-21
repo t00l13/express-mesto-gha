@@ -16,19 +16,14 @@ module.exports.createCard = async (req, res) => {
   try{
     const card = await Card.create({name, link, owner}).orFail(new NotFoundError());
     res.send({data: card});
-  } catch(err) {
+  } catch (err) {
     let code = 500;
     let msg = "Произошла ошибка";
-    switch(err.name){
-      case "CastError":
+    switch (err.name) {
+      case "ValidationError":
         code = 400;
-        msg =  "Введены некоррктные данные";
-      break;
-
-      case "NotFoundError":
-        code = 404;
-        msg =  "Данные не найдены";
-      break;
+        msg = "Введены некорректные данные";
+        break;
     }
     res.status(code).send(msg);
   }

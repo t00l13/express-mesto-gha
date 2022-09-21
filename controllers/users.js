@@ -36,19 +36,15 @@ module.exports.createUser = async ( req, res) => {
   const {name, about, avatar} = req.body;
 
   try{
-    const user = await User.create({name, about, avatar}).orFail(new NotFoundError());
+    const user = await User.create({name, about, avatar});
     res.send({data: user});
   } catch (err) {
     let code = 500;
     let msg = "Произошла ошибка";
     switch (err.name) {
-      case "CastError":
+      case "ValidationError":
         code = 400;
         msg = "Введены некорректные данные";
-        break;
-      case "NotFoundError":
-        code = 404;
-        msg = "Данные не найдены";
         break;
     }
     res.status(code).send(msg);
