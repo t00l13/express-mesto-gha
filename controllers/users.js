@@ -15,19 +15,18 @@ module.exports.getUser = async (req, res) => {
   try{
     const user = await User.findById(reqUser).orFail(new NotFoundError());
     res.send({data: user});
-  } catch(err) {
+  } catch (err) {
     let code = 500;
     let msg = "Произошла ошибка";
-    switch(err.name){
+    switch (err.name) {
       case "CastError":
         code = 400;
-        msg =  "Введены некоррктные данные";
-      break;
-
+        msg = "Введены некорректные данные";
+        break;
       case "NotFoundError":
         code = 404;
-        msg =  "Данные не найдены";
-      break;
+        msg = "Данные не найдены";
+        break;
     }
     res.status(code).send(msg);
   }
@@ -39,19 +38,18 @@ module.exports.createUser = async ( req, res) => {
   try{
     const user = await User.create({name, about, avatar}).orFail(new NotFoundError());
     res.send({data: user});
-  } catch(err) {
+  } catch (err) {
     let code = 500;
     let msg = "Произошла ошибка";
-    switch(err.name){
+    switch (err.name) {
       case "CastError":
         code = 400;
-        msg =  "Введены некоррктные данные";
-      break;
-
+        msg = "Введены некорректные данные";
+        break;
       case "NotFoundError":
         code = 404;
-        msg =  "Данные не найдены";
-      break;
+        msg = "Данные не найдены";
+        break;
     }
     res.status(code).send(msg);
   }
@@ -69,19 +67,18 @@ module.exports.updateUser = async ( req, res) => {
       }
     ).orFail(new NotFoundError());
     res.send({data: user});
-  } catch(err) {
+  } catch (err) {
     let code = 500;
     let msg = "Произошла ошибка";
-    switch(err.name){
+    switch (err.name) {
       case "CastError":
         code = 400;
-        msg =  "Введены некоррктные данные";
-      break;
-
+        msg = "Введены некорректные данные";
+        break;
       case "NotFoundError":
         code = 404;
-        msg =  "Данные не найдены";
-      break;
+        msg = "Данные не найдены";
+        break;
     }
     res.status(code).send(msg);
   }
@@ -100,19 +97,18 @@ module.exports.updateAvatar = async ( req, res) => {
       }
     ).orFail(new NotFoundError());
     res.send({data: updateAvatar});
-  } catch(err) {
+  } catch (err) {
     let code = 500;
     let msg = "Произошла ошибка";
-    switch(err.name){
+    switch (err.name) {
       case "CastError":
         code = 400;
-        msg =  "Введены некоррктные данные";
-      break;
-
+        msg = "Введены некорректные данные";
+        break;
       case "NotFoundError":
         code = 404;
-        msg =  "Данные не найдены";
-      break;
+        msg = "Данные не найдены";
+        break;
     }
     res.status(code).send(msg);
   }
