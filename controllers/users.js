@@ -1,4 +1,5 @@
 const User = require("../models/user.js");
+const {NotFoundError} = require("../errors/errors.js");
 
 module.exports.getUsers = async (req,res) => {
   try{
@@ -12,11 +13,20 @@ module.exports.getUsers = async (req,res) => {
 module.exports.getUser = async (req, res) => {
   const reqUser = req.params.id;
   try{
-    const user = await User.findById(reqUser);
+    const user = await User.findById(reqUser).orFail(new NotFoundError());
     res.send({data: user});
   } catch(err) {
-    console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
     res.status(500).send({message: "Произошла ошибка!"});
+    switch(err.name){
+      case "CastError":
+        res.status(400).send({message: "Введены некоррктные данные"});
+      break;
+
+      case "NotFoundError":
+        res.status(404).send({message: "Данные не найдены"});
+      break;
+    }
+     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
   }
 };
 
@@ -27,8 +37,17 @@ module.exports.createUser = async ( req, res) => {
     const user = await User.create({name, about, avatar});
     res.send({data: user});
   } catch(err) {
-    console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
     res.status(500).send({message: "Произошла ошибка!"});
+    switch(err.name){
+      case "CastError":
+        res.status(400).send({message: "Введены некоррктные данные"});
+      break;
+
+      case "NotFoundError":
+        res.status(404).send({message: "Данные не найдены"});
+      break;
+    }
+     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
   }
 };
 
@@ -45,8 +64,17 @@ module.exports.updateUser = async ( req, res) => {
     );
     res.send({data: user});
   } catch(err) {
-    console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
     res.status(500).send({message: "Произошла ошибка!"});
+    switch(err.name){
+      case "CastError":
+        res.status(400).send({message: "Введены некоррктные данные"});
+      break;
+
+      case "NotFoundError":
+        res.status(404).send({message: "Данные не найдены"});
+      break;
+    }
+     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
   }
 };
 
@@ -64,7 +92,16 @@ module.exports.updateAvatar = async ( req, res) => {
     );
     res.send({data: updateAvatar});
   } catch(err) {
-    console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
     res.status(500).send({message: "Произошла ошибка!"});
+    switch(err.name){
+      case "CastError":
+        res.status(400).send({message: "Введены некоррктные данные"});
+      break;
+
+      case "NotFoundError":
+        res.status(404).send({message: "Данные не найдены"});
+      break;
+    }
+     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
   }
 };
