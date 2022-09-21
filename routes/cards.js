@@ -9,9 +9,9 @@ const {
 } = require("../controllers/cards");
 
 router.get("/", getCards);
-router.get("/", createCard);
-router.get("/:cardId", deleteCard);
-router.get("/cardId/likes", likeCard);
-router.get("/cardId/likes", dislikeCard);
+router.post("/", createCard);
+router.delete("/:cardId", deleteCard);
+router.put("/cardId/likes", likeCard);
+router.delete("/cardId/likes", dislikeCard);
 
 module.exports = router;

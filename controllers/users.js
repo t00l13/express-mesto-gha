@@ -25,7 +25,7 @@ module.exports.createUser = async ( req, res) => {
 
   try{
     const user = await User.create({name, about, avatar});
-    req.send({data: user});
+    res.send({data: user});
   } catch(err) {
     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
     res.status(500).send({message: "Произошла ошибка!"});
