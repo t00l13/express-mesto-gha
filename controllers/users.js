@@ -16,7 +16,6 @@ module.exports.getUser = async (req, res) => {
     const user = await User.findById(reqUser).orFail(new NotFoundError());
     res.send({data: user});
   } catch(err) {
-    res.status(500).send({message: "Произошла ошибка!"});
     switch(err.name){
       case "CastError":
         res.status(400).send({message: "Введены некоррктные данные"});
@@ -26,6 +25,7 @@ module.exports.getUser = async (req, res) => {
         res.status(404).send({message: "Данные не найдены"});
       break;
     }
+    res.status(500).send({message: "Произошла ошибка!"});
      console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
   }
 };
@@ -37,7 +37,6 @@ module.exports.createUser = async ( req, res) => {
     const user = await User.create({name, about, avatar});
     res.send({data: user});
   } catch(err) {
-    res.status(500).send({message: "Произошла ошибка!"});
     switch(err.name){
       case "CastError":
         res.status(400).send({message: "Введены некоррктные данные"});
@@ -47,6 +46,7 @@ module.exports.createUser = async ( req, res) => {
         res.status(404).send({message: "Данные не найдены"});
       break;
     }
+    res.status(500).send({message: "Произошла ошибка!"});
      console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
   }
 };

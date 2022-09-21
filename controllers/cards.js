@@ -16,7 +16,6 @@ module.exports.createCard = async (req, res) => {
     const card = await Card.create({name, link, owner});
     res.send({data: card});
   } catch(err) {
-    res.status(500).send({message: "Произошла ошибка!"});
     switch(err.name){
       case "CastError":
         res.status(400).send({message: "Введены некоррктные данные"});
@@ -26,6 +25,7 @@ module.exports.createCard = async (req, res) => {
         res.status(404).send({message: "Данные не найдены"});
       break;
     }
+     res.status(500).send({message: "Произошла ошибка!"});
      console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
   }
 };
@@ -36,7 +36,6 @@ module.exports.deleteCard = async (req, res) => {
     const card = await Card.findByIdAndRemove(reqCard);
     res.send({data: card});
   } catch(err) {
-    res.status(500).send({message: "Произошла ошибка!"});
     switch(err.name){
       case "CastError":
         res.status(400).send({message: "Введены некоррктные данные"});
@@ -46,6 +45,7 @@ module.exports.deleteCard = async (req, res) => {
         res.status(404).send({message: "Данные не найдены"});
       break;
     }
+    res.status(500).send({message: "Произошла ошибка!"});
      console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
   }
 };
