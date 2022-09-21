@@ -16,17 +16,20 @@ module.exports.createCard = async (req, res) => {
     const card = await Card.create({name, link, owner});
     res.send({data: card});
   } catch(err) {
+    let code = 500;
+    let msg = "Произошла ошибка";
     switch(err.name){
       case "CastError":
-        res.status(400).send({message: "Введены некоррктные данные"});
+        code = 400;
+        msg =  "Введены некоррктные данные";
       break;
 
       case "NotFoundError":
-        res.status(404).send({message: "Данные не найдены"});
+        code = 404;
+        msg =  "Данные не найдены";
       break;
     }
-     res.status(500).send({message: "Произошла ошибка!"});
-     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
+    res.status(code).send(msg);
   }
 };
 
@@ -36,17 +39,20 @@ module.exports.deleteCard = async (req, res) => {
     const card = await Card.findByIdAndRemove(reqCard);
     res.send({data: card});
   } catch(err) {
+    let code = 500;
+    let msg = "Произошла ошибка";
     switch(err.name){
       case "CastError":
-        res.status(400).send({message: "Введены некоррктные данные"});
+        code = 400;
+        msg =  "Введены некоррктные данные";
       break;
 
       case "NotFoundError":
-        res.status(404).send({message: "Данные не найдены"});
+        code = 404;
+        msg =  "Данные не найдены";
       break;
     }
-    res.status(500).send({message: "Произошла ошибка!"});
-     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
+    res.status(code).send(msg);
   }
 };
 
@@ -57,17 +63,20 @@ module.exports.likeCard = async (req, res) => {
     }, {new: true});
     res.send({data: likes});
   } catch(err) {
-    res.status(500).send({message: "Произошла ошибка!"});
+    let code = 500;
+    let msg = "Произошла ошибка";
     switch(err.name){
       case "CastError":
-        res.status(400).send({message: "Введены некоррктные данные"});
+        code = 400;
+        msg =  "Введены некоррктные данные";
       break;
 
       case "NotFoundError":
-        res.status(404).send({message: "Данные не найдены"});
+        code = 404;
+        msg =  "Данные не найдены";
       break;
     }
-     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
+    res.status(code).send(msg);
   }
 };
 
@@ -78,16 +87,19 @@ module.exports.dislikeCard = async (req, res) => {
     }, {new: true});
     res.send({data: likes});
   } catch(err) {
-    res.status(500).send({message: "Произошла ошибка!"});
+    let code = 500;
+    let msg = "Произошла ошибка";
     switch(err.name){
       case "CastError":
-        res.status(400).send({message: "Введены некоррктные данные"});
+        code = 400;
+        msg =  "Введены некоррктные данные";
       break;
 
       case "NotFoundError":
-        res.status(404).send({message: "Данные не найдены"});
+        code = 404;
+        msg =  "Данные не найдены";
       break;
     }
-     console.log(`Произшла ошибка : ${err.name} с сообщением ${err.message}`);
+    res.status(code).send(msg);
   }
 };
