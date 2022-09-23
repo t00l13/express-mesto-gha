@@ -83,6 +83,11 @@ module.exports.updateUser = async (req, res) => {
         code = NOT_FOUND;
         message = 'Данные не найдены';
         break;
+
+      case 'ValidationError':
+        code = ERROR_CODE;
+        message = 'Некорректные данные';
+        break;
         // no default
     }
     res.status(code).send({ message });
@@ -113,6 +118,11 @@ module.exports.updateAvatar = async (req, res) => {
       case 'NotFoundError':
         code = NOT_FOUND;
         message = 'Данные не найдены';
+        break;
+
+      case 'ValidationError':
+        code = ERROR_CODE;
+        message = 'Некорректные данные';
         break;
         // no default
     }
