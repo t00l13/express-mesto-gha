@@ -1,31 +1,47 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const { errors } = require('celebrate');
+require('dotenv').config();
+
+const NotFoundError = require('./errors/NotFoundError');
+
+const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
+const {
+  validationLogin,
+  validationUser,
+} = require('./middlewares/validation');
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+}, (err) => {
+  if (err) { console.log(err); }
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63287386af88d76bbfad1040',
-  };
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
-  next();
-});
+app.post('/signin', validationLogin, login);
+app.post('/signup', validationUser, createUser);
+
+app.use(auth);
 
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Страница не найдена!' });
+app.use(errors());
+
+app.use('*', () => {
+  throw new NotFoundError('Запрашиваемый ресурс не найден');
 });
 
 app.listen(PORT, () => {
