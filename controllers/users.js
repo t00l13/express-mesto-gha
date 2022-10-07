@@ -19,21 +19,19 @@ const getUsers = (req, res, next) => {
 
 // получение пользователя
 const getUser = (req, res, next) => {
-  const { _id } = req.params;
-
-  return User
-    .findById(_id)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
+        throw new NotFoundError('Ошибка 404: Пользователь не найден');
       }
-      return res.status(200).send(user);
+      return res.send({ data: user });
     })
     .catch((err) => {
-      console.log(err.name);
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
-      } else next(err);
+        next(new BadRequestError('Ошибка 400: Переданы некорректные данные'));
+        return;
+      }
+      next(err);
     });
 };
 // получаем себя
