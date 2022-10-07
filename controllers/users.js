@@ -10,11 +10,12 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 const { JWT_SECRET, NODE_ENV } = process.env;
 
 // получние всех пользователей
-const getUsers = (req, res, next) =>{
-User.find({})
-.then((user) => {
-  res.send({ data: user });
-}).catch(next);
+const getUsers = (req, res, next) => {
+  User.find({})
+    .then((user) => {
+      res.send({ data: user });
+    }).catch(next);
+};
 
 // получение пользователя
 const getUser = (req, res, next) => {
