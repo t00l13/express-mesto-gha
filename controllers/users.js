@@ -122,13 +122,12 @@ const updateAvatar = (req, res, next) => {
       return res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
-      } else if (err.message === 'NotFound') {
-        next(new NotFoundError('Нет пользователя с таким id'));
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Ошибка 400: Переданы некорректные данные'));
+        return;
       }
-    })
-    .catch(next);
+      next(err);
+    });
 };
 // логин
 const login = (req, res, next) => {
