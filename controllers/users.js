@@ -143,7 +143,7 @@ const login = (req, res, next) => {
           about: user.about,
           avatar: user.avatar,
         },
-        'top-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
         { expiresIn: '7d' },
       );
       res
