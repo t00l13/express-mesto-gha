@@ -55,22 +55,24 @@ const getUserMe = (req, res, next) => {
 };
 // создаем пользователя
 const createUser = (req, res, next) => {
-  bcrypt
-    .hash(req.body.password, 10)
-    .then((hash) => (User.create({
-      name: req.body.name,
-      about: req.body.about,
-      avatar: req.body.avatar,
-      email: req.body.email,
-      password: hash,
-    })))
-    .then((user) => res.send({
-      _id: user._id,
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-      email: user.email,
-    })).catch((err) => {
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      email, password: hash, name, about, avatar,
+    }))
+    .then((user) => {
+      res.send({
+        data: {
+          name: user.name,
+          about: user.about,
+          avatar: user.avatar,
+          email: user.email,
+          _id: user._id,
+        },
+      });
+    }).catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Некорректные данные'));
         return;
