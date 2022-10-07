@@ -5,6 +5,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ConflictError = require('../errors/ConflictError');
 const BadRequestError = require('../errors/BadRequestError');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 
 const { JWT_SECRET, NODE_ENV } = process.env;
 
@@ -149,7 +150,9 @@ const login = (req, res, next) => {
       res
         .send({ token });
     })
-    .catch(next);
+    .catch(() => {
+      next(new UnauthorizedError('Неверные email или пароль'));
+    });
 };
 
 module.exports = {
