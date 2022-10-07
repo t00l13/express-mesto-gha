@@ -10,26 +10,29 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 const { JWT_SECRET, NODE_ENV } = process.env;
 
 // получние всех пользователей
-const getUsers = (req, res, next) => User
-  .find({})
-  .then((users) => res.status(200).send(users))
-  .catch(next(new BadRequestError('Переданы некорректные данные')));
+const getUsers = (req, res, next) =>{
+User.find({})
+.then((user) => {
+  res.send({ data: user });
+}).catch(next);
 
 // получение пользователя
 const getUser = (req, res, next) => {
-  User.findById(req.params.userId)
+  const { _id } = req.params;
+
+  return User
+    .findById(_id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Ошибка 404: Пользователь не найден');
+        throw new NotFoundError('Нет пользователя с таким id');
       }
-      return res.send({ data: user });
+      return res.status(200).send(user);
     })
     .catch((err) => {
+      console.log(err.name);
       if (err.name === 'CastError') {
-        next(new BadRequestError('Ошибка 400: Переданы некорректные данные'));
-        return;
-      }
-      next(err);
+        next(new BadRequestError('Переданы некорректные данные'));
+      } else next(err);
     });
 };
 // получаем себя
