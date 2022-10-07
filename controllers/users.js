@@ -84,8 +84,7 @@ const createUser = (req, res, next) => {
         return;
       }
       next(err);
-    })
-    .catch(next);
+    });
 };
 // редактируем пользователя
 const updateUser = (req, res, next) => {
