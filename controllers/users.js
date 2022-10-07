@@ -12,18 +12,14 @@ const { JWT_SECRET, NODE_ENV } = process.env;
 const getUsers = (req, res, next) => User
   .find({})
   .then((users) => res.status(200).send(users))
-  .catch((err) => {
-    if (err.name === 'CastError') {
-      throw new BadRequestError('Переданы некорректные данные');
-    }
-  })
-  .catch(next);
+  .catch(next(new BadRequestError('Переданы некорректные данные')));
+
 // получение пользователя
 const getUser = (req, res, next) => {
-  const { userId } = req.params;
+  const { _id } = req.params;
 
   return User
-    .findById(userId)
+    .findById(_id)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
@@ -79,10 +75,14 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
-      } else if (err.code === 11000) {
-        next(new ConflictError('Пользователь с данным email уже существует'));
+        next(new BadRequestError('Некорректные данные'));
+        return;
       }
+      if (err.code === 11000) {
+        next(new ConflictError('Указанный email уже существует'));
+        return;
+      }
+      next(err);
     })
     .catch(next);
 };
@@ -102,13 +102,12 @@ const updateUser = (req, res, next) => {
       return res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
-      } else if (err.message === 'NotFound') {
-        next(new NotFoundError('Нет пользователя с таким id'));
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Ошибка 400: Переданы некорректные данные'));
+        return;
       }
-    })
-    .catch(next);
+      next(err);
+    });
 };
 // редактируем аву
 const updateAvatar = (req, res, next) => {

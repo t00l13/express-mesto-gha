@@ -39,13 +39,13 @@ app.use(auth);
 app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
+app.use('*', (req, res, next) => {
+  next(new NotFoundError('Запрашиваемый ресурс не найден!'));
+});
+
 app.use(errors());
 
 app.use(errorHandler);
-
-app.use('*', () => {
-  throw new NotFoundError('Запрашиваемый ресурс не найден');
-});
 
 app.listen(PORT, () => {
   console.log(`Server start on port: ${PORT}`);

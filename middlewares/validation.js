@@ -24,13 +24,13 @@ const validationUpdateAvatar = celebrate({
 
 const validationIdUser = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
+    userId: Joi.string().alphanum().length(24).hex(),
   }),
 });
 
 const validationIdCard = celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().alphanum().length(24),
+    cardId: Joi.string().alphanum().length(24).hex(),
   }),
 });
 
@@ -40,14 +40,14 @@ const validationUser = celebrate({
     about: Joi.string().min(2).max(20),
     avatar: Joi.string().custom(validationUrl),
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 
 const validationLogin = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 

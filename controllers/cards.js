@@ -6,38 +6,33 @@ const ForbiddenError = require('../errors/ForbiddenError');
 // получение карточек
 const getCards = (req, res, next) => Card
   .find({})
-  .populate('owner')
   .then((cards) => res.status(200).send(cards))
-  .catch((err) => {
-    if (err.name === 'CastError') {
-      next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
-    } else next(err);
-  });
+  .catch(next);
 // удаление карточки
 const deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
     .orFail(new NotFoundError('Карточки не существует'))
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
-        next(new ForbiddenError('Недостаточно прав для выполнения операции'));
+        throw new ForbiddenError('Недостаточно прав для выполнения операции');
       }
-      Card.findByIdAndDelete(req.params.cardId)
-        .then(() => res.status(200).send(card))
-        .catch(next);
+      return Card.findByIdAndDelete(req.params.cardId);
     })
-    .catch(next);
+    .then((card) => res.status(200).send(card))
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Ошибка 400: Некорректный id карточки'));
+        return;
+      }
+      next(err);
+    });
 };
 // создание карточки
 const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card
     .create({ name, link, owner: req.user._id })
-    .then((card) => {
-      card.populate('owner').execPopulate()
-        .then((populatedCard) => {
-          res.send(populatedCard);
-        });
-    })
+    .then((card) => { res.send({ data: card }); })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
@@ -54,12 +49,9 @@ const likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        next(new NotFoundError('Карточка не найдена'));
+        throw new NotFoundError('Карточка не найдена');
       }
-      card.populate('owner').execPopulate()
-        .then((populatedCard) => {
-          res.send(populatedCard);
-        });
+      return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -77,11 +69,12 @@ const dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .orFail(() => new NotFoundError('Карточка не найдена'))
-    .then((card) => card.populate('owner').execPopulate()
-      .then((populatedCard) => {
-        res.send(populatedCard);
-      }))
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Ошибка 404: Карточка не найдена');
+      }
+      return res.status(200).send({ data: card });
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
