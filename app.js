@@ -19,17 +19,18 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-}, (err) => {
-  if (err) { console.log(err); }
-});
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+mongoose.connect('mongodb://localhost:27017/mestodb', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+app.listen(PORT, () => {
+  console.log(`Server start on port: ${PORT}`);
+});
 
 app.post('/signin', validationLogin, login);
 app.post('/signup', validationUser, createUser);
@@ -46,7 +47,3 @@ app.use('*', (req, res, next) => {
 app.use(errors());
 
 app.use(errorHandler);
-
-app.listen(PORT, () => {
-  console.log(`Server start on port: ${PORT}`);
-});
