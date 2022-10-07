@@ -17,10 +17,24 @@ const getUsers = (req, res, next) => User
 
 // получение пользователя
 const getUser = (req, res, next) => {
-  const { _id } = req.params;
-
-  return User
-    .findById(_id)
+  User.findById(req.params.userId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Ошибка 404: Пользователь не найден');
+      }
+      return res.send({ data: user });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError('Ошибка 400: Переданы некорректные данные'));
+        return;
+      }
+      next(err);
+    });
+};
+// получаем себя
+const getUserMe = (req, res, next) => {
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
@@ -31,20 +45,10 @@ const getUser = (req, res, next) => {
       console.log(err.name);
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else next(err);
-    });
-};
-// получаем себя
-const getUserMe = (req, res, next) => {
-  const { _id } = req.user;
-  User.findById(_id)
-    .then((user) => {
-      if (!user) {
-        throw new NotFoundError(`Пользователь с id: ${_id} не найден`);
+        return;
       }
-      res.send({ message: user });
-    })
-    .catch(next);
+      next(err);
+    });
 };
 // создаем пользователя
 const createUser = (req, res, next) => {
