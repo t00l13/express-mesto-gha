@@ -138,10 +138,6 @@ const login = (req, res, next) => {
       const token = jwt.sign(
         {
           _id: user._id,
-          email: user.email,
-          name: user.name,
-          about: user.about,
-          avatar: user.avatar,
         },
         NODE_ENV === 'production' ? JWT_SECRET : 'some-secret-key',
         { expiresIn: '7d' },
