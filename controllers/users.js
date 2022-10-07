@@ -36,10 +36,7 @@ const getUser = (req, res, next) => {
 };
 // получаем себя
 const getUserMe = (req, res, next) => {
-  const owner = req.user._id;
-
-  return User
-    .findById(owner)
+  User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Нет пользователя с таким id');
@@ -50,7 +47,9 @@ const getUserMe = (req, res, next) => {
       console.log(err.name);
       if (err.name === 'CastError') {
         next(new BadRequestError('Переданы некорректные данные'));
-      } else next(err);
+        return;
+      }
+      next(err);
     });
 };
 // создаем пользователя
