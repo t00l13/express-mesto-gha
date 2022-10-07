@@ -36,21 +36,15 @@ const getUser = (req, res, next) => {
 };
 // получаем себя
 const getUserMe = (req, res, next) => {
-  User.findById(req.params.userId)
+  const { _id } = req.user;
+  User.findById(_id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
+        throw new NotFoundError(`Пользователь с id: ${_id} не найден`);
       }
-      return res.status(200).send(user);
+      res.send({ message: user });
     })
-    .catch((err) => {
-      console.log(err.name);
-      if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные'));
-        return;
-      }
-      next(err);
-    });
+    .catch(next);
 };
 // создаем пользователя
 const createUser = (req, res, next) => {
