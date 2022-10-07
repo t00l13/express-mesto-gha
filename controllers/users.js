@@ -40,7 +40,7 @@ const getUserMe = (req, res, next) => {
   User.findById(_id)
     .then((user) => {
       if (!user) {
-        throw new NotFoundError(`Пользователь с id: ${_id} не найден`);
+        throw new NotFoundError('Пользователь с таким id не найден');
       }
       res.send({ message: user });
     })
