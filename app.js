@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
+const errorHandler = require('./middlewares/error-handler');
 require('dotenv').config();
 
 const NotFoundError = require('./errors/NotFoundError');
@@ -39,6 +40,8 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use(errors());
+
+app.use(errorHandler);
 
 app.use('*', () => {
   throw new NotFoundError('Запрашиваемый ресурс не найден');
