@@ -56,8 +56,6 @@ const likeCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message).join(', ')}`));
-      } else if (err.message === 'NotFound') {
-        next(new NotFoundError('Передан несуществующий _id карточки.'));
       } else next(err);
     });
 };

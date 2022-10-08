@@ -14,10 +14,10 @@ const {
   getUserMe,
 } = require('../controllers/users');
 
-router.get('/:id', validationIdUser, getUser);
+router.get('/me', getUserMe);
+router.get('/:userId', validationIdUser, getUser);
 router.get('/', getUsers);
 router.post('/', createUser);
-router.get('/me', getUserMe);
 router.patch('/me', validationUpdateUser, updateUser);
 router.patch('/me/avatar', validationUpdateAvatar, updateAvatar);
 
